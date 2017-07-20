@@ -1,10 +1,12 @@
-# About this project
+# Internal note
 
-Original is located at https://github.com/christkv/mongodb-proxy
+Original code is located at https://github.com/christkv/mongodb-proxy
+
 Changes have been made to
-a) fix the problem with connection cursor
-b) support blacklisted commands
-c) have a log of all requests printed out
+
+* fix the problem with connection cursor
+* support blacklisted commands
+* have a log of all requests printed out
 
 # MongoDB Proxy
 
