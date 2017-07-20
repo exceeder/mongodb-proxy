@@ -1,3 +1,11 @@
+# About this project
+
+Original is located at https://github.com/christkv/mongodb-proxy
+Changes have been made to
+a) fix the problem with connection cursor
+b) support blacklisted commands
+c) have a log of all requests printed out
+
 # MongoDB Proxy
 
 The MongoDB proxy was developed to help drivers who do not have either replicaset or advanced authentication support for MongoDB. It aims to make it possible for any basic mongodb driver to be able to tap into the advanced features provided by MongoDB.
