@@ -1,12 +1,33 @@
-# Internal note
+# Forked MongoDB read-only proxy note
 
-Original code is located at https://github.com/christkv/mongodb-proxy
+**Warning!**
 
-Changes have been made to
+Use this software at your own risk, there was no security audit or appropriate testing. This proxy is only meant to prevent
+accidental data modifications by trusted parties.
+
+**Description of the changes**
+ 
+The location of the original code: https://github.com/christkv/mongodb-proxy
+
+Changes have been made for this proxy to act as a read-only proxy:
 
 * fix the problem with connection cursor
 * support blacklisted commands
 * have a log of all requests printed out
+
+
+
+To run:
+``` 
+node index.js -p 61000
+```
+
+To verify it works:
+```
+./queryExample
+```
+
+Original README is below.
 
 # MongoDB Proxy
 
