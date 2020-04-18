@@ -1,2 +1,5 @@
 #!/bin/bash
-mongo --port=61000 logs --eval 'printjson(db.actions.find({time:ISODate("2015-06-23T20:13:15.657Z")}).next());'
+echo "List listDatabases is read-only, OK to run"
+mongo --port=61000 --quiet --eval 'printjson(db.adminCommand( { listDatabases: 1 } ))'
+echo "This should fail with 'Cannot excecute'"
+mongo --port=61000 --quiet --eval 'db.createCollection("testdb")'
