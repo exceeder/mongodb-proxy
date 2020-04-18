@@ -1,2 +1,3 @@
 #!/bin/bash
-mongo --port=61000 logs --eval 'printjson(db.actions.find({time:ISODate("2015-06-23T20:13:15.657Z")}).next());'
+mongo --port=61000 --eval 'printjson(db.adminCommand( { listDatabases: 1 } ))'
+mongo admin --port=61000 --eval 'printjson(db.getCollectionNames())'
