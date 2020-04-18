@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "List listDatabases is read-only, OK to run"
+mongo --port=61000 --quiet --eval 'printjson(db.adminCommand( { listDatabases: 1 } ))'
+echo "This should fail with 'Cannot excecute'"
+mongo --port=61000 --quiet --eval 'db.createCollection("testdb")'

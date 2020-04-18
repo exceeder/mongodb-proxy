@@ -30,7 +30,7 @@ var yargs = require('yargs')
   // Logger information
   .describe('log_level')
   .default('log_level', 'error')
-  .describe('log_file')
+  .describe('log_file');
 
 // Parse options
 var parseOptions = function(argv) {
@@ -59,13 +59,13 @@ var parseOptions = function(argv) {
 
   // Return the options
   return options;
-}
+};
 
 // Get parsed arguments
-var argv = yargs.argv
+var argv = yargs.argv;
 
 // List help
-if(argv.h) return console.log(yargs.help())
+if(argv.h) return console.log(yargs.help());
 
 // Parse the options and generate final field
 var options = parseOptions(argv);
