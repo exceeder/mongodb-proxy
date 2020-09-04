@@ -20,6 +20,8 @@ var yargs = require('yargs')
   // Allow us to specify a json configuration file
   .describe('c', 'JSON configuration file')
   .alias('c', 'config')
+  .describe('rw', 'Read-Write proxy mote')
+  .default('rw', false)
   // SSL Cert options
   .describe('auth-sslCA', 'Location of certificate authority file')
   .describe('auth-sslCert', 'Location of public certificate file we are presenting')
@@ -38,20 +40,21 @@ var parseOptions = function(argv) {
   if(argv.c) return JSON.parse(fs.readFileSync(argv.c, 'utf8'));
 
   // Create options object from cmd line options
-  var options = {auth: {}};
+  var options = {};
   
   // Let's create the final object
   if(argv.p) options.port = argv.p;
   if(argv.u) options.uri = argv.u;
   if(argv.b) options.bind_to = argv.b;
   if(argv.debug) options.debug = argv.debug;
+  options.rw = argv.rw;
   
   // Set the authentication options
-  if(argv['auth-sslCA']) options.auth.sslCA = argv['auth-sslCA'];
-  if(argv['auth-sslCert']) options.auth.sslCert = argv['auth-sslCert'];
-  if(argv['auth-sslKey']) options.auth.sslKey = argv['auth-sslKey'];
-  if(argv['auth-sslPass']) options.auth.sslCA = argv['auth-sslPass'];
-  options.auth.sslValidate = argv['auth-sslValidate'];
+  if(argv['auth-sslCA']) options.tlsCAFile = argv['auth-sslCA'];
+  if(argv['auth-sslCert']) options.tlsCertificateFile = argv['auth-sslCert'];
+  if(argv['auth-sslKey']) options.tlsCertificateKeyFile = argv['auth-sslKey'];
+  if(argv['auth-sslPass']) options.tlsCertificateKeyFilePassword = argv['auth-sslPass'];
+  options.tlsAllowInvalidCertificates = argv['auth-sslValidate'];
   
   // Logger options
   if(argv['log_level']) options['log_level'] = argv['log_level'];
