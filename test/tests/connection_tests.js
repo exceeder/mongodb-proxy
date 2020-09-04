@@ -7,7 +7,7 @@ exports.beforeTests = function(configuration, callback) {
   // Create a new proxy and start it
   var proxy = new Proxy({
       port: 51000, uri: mongodburi, bind_to: '127.0.0.1',
-      debug:true, log_debug:true, log_level:'debug', rw:false, "auth-sslValidate":false,
+      debug:false, log_level:'info', rw:false, "auth-sslValidate":false,
       socketTimeout: 10000,
       tls: true
   });
