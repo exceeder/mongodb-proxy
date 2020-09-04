@@ -6,7 +6,10 @@ exports.beforeTests = function(configuration, callback) {
   var mongodburi = "mongodb://localhost:27017/test";
   // Create a new proxy and start it
   var proxy = new Proxy({
-    port: 51000, uri: mongodburi, bind_to: '127.0.0.1', debug:true, rw:false
+      port: 51000, uri: mongodburi, bind_to: '127.0.0.1',
+      debug:true, log_debug:true, log_level:'debug', rw:false, "auth-sslValidate":false,
+      socketTimeout: 10000,
+      tls: true
   });
 
   MongoClient.connect(mongodburi, {
@@ -35,15 +38,21 @@ exports['Should correctly connect to proxy'] = {
     MongoClient
       .connect(url, {poolSize: 1, useUnifiedTopology: true})
       .then(async db => {
-          const collection = db.db().collection('t1');
-          // Perform an inserts
-          const insertResult = await collection.insertMany([{a:1}, {b:1}, {c:1}, {d:1}])
-          test.equal(1, insertResult.result.ok);
-          test.equal(4, insertResult.result.n);
-          const docs = await collection.find({}).batchSize(2).toArray();
-          test.notEqual(0, docs.length);
-          db.close();
-          test.done();
+          try {
+              const collection = db.db().collection('t1');
+              // Perform an inserts
+              const insertResult = await collection.insertMany([{a: 1}, {b: 1}, {c: 1}, {d: 1}])
+              test.equal(1, insertResult.result.ok);
+              test.equal(4, insertResult.result.n);
+              const docs = await collection.find({}).batchSize(2).toArray();
+              test.notEqual(0, docs.length);
+              db.close();
+              test.done();
+          } catch (e) {
+              console.log("Simple test failed",e)
+              db.close();
+              test.done();
+          }
       }).catch(err => {
         console.log(err);
         test.equal(null, err)
