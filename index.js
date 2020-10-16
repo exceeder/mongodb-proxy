@@ -1,57 +1,67 @@
-var Proxy = require('./lib/proxy')
+const Proxy = require('./lib/proxy')
   , fs = require('fs');
 
 // Start the 
-var yargs = require('yargs')
-  .usage('Start a proxy.\nUsage: $0')
-  .example('$0 -p 51000 -b 127.0.0.1 -u mongodb://localhost:27017', 'Run proxy on port 51000 and bind to 127.0.0.1')
-  // The Monitor process port
-  .describe('p', 'Port proxy is running on')
-  .default('p', 51000)
-  .alias('p', 'port')
-  // Number of processes to use in the execution
-  .describe('u', 'Connection url to mongodb')
-  .default('u', 'mongodb://localhost:27017/test')
-  .alias('u', 'uri')
-  // Run all the processes locally
-  .describe('b', 'Bind to host interface')
-  .default('b', '127.0.0.1')
-  .alias('b', 'bind_to')
-  // Allow us to specify a json configuration file
-  .describe('c', 'JSON configuration file')
-  .alias('c', 'config')
-  // SSL Cert options
-  .describe('auth-sslCA', 'Location of certificate authority file')
-  .describe('auth-sslCert', 'Location of public certificate file we are presenting')
-  .describe('auth-sslKey', 'Location of private certificate file we are presenting')
-  .describe('auth-sslPass', 'SSL Certificate password')
-  .describe('auth-sslValidate', 'Validate mongod certificate')
-  .default('auth-sslValidate', false)
-  // Logger information
-  .describe('log_level')
-  .default('log_level', 'error')
-  .describe('log_file');
+const yargs = require('yargs')
+    .usage('Start a proxy.\nUsage: $0')
+    .example('$0 -p 51000 -b 127.0.0.1 -u mongodb://localhost:27017', 'Run proxy on port 51000 and bind to 127.0.0.1')
+    // The Monitor process port
+    .describe('p', 'Port proxy is running on')
+    .default('p', 51000)
+    .alias('p', 'port')
+    // Number of processes to use in the execution
+    .describe('u', 'Connection url to mongodb')
+    .default('u', 'mongodb://localhost:27017/test')
+    .alias('u', 'uri')
+    // Run all the processes locally
+    .describe('b', 'Bind to host interface')
+    .default('b', '127.0.0.1')
+    .alias('b', 'bind_to')
+    // Allow us to specify a json configuration file
+    .describe('c', 'JSON configuration file')
+    .alias('c', 'config')
+    .describe('rw', 'Read-Write proxy mode (default is read-only)')
+    .default('rw', false)
+    .describe('socketTimeout', 'SocketTimeout ms')
+    .default('socketTimeout', 360000)
+    .describe('tls', 'tls mode')
+    .default('tls', false)
+
+    // SSL Cert options
+    .describe('auth-sslCA', 'Location of certificate authority file')
+    .describe('auth-sslCert', 'Location of public certificate file we are presenting')
+    .describe('auth-sslKey', 'Location of private certificate file we are presenting')
+    .describe('auth-sslPass', 'SSL Certificate password')
+    .describe('auth-sslValidate', 'Validate mongod certificate')
+    .default('auth-sslValidate', false)
+    // Logger information
+    .describe('log_level')
+    .default('log_level', 'error')
+    .describe('log_file');
 
 // Parse options
-var parseOptions = function(argv) {
+const parseOptions = function(argv) {
   // Do we have a configuration file
   if(argv.c) return JSON.parse(fs.readFileSync(argv.c, 'utf8'));
 
   // Create options object from cmd line options
-  var options = {auth: {}};
+  const options = {};
   
   // Let's create the final object
   if(argv.p) options.port = argv.p;
   if(argv.u) options.uri = argv.u;
   if(argv.b) options.bind_to = argv.b;
   if(argv.debug) options.debug = argv.debug;
-  
+  options.rw = argv.rw;
+  options.socketTimeout = argv.socketTimeout;
+  options.tls = argv.tls;
+
   // Set the authentication options
-  if(argv['auth-sslCA']) options.auth.sslCA = argv['auth-sslCA'];
-  if(argv['auth-sslCert']) options.auth.sslCert = argv['auth-sslCert'];
-  if(argv['auth-sslKey']) options.auth.sslKey = argv['auth-sslKey'];
-  if(argv['auth-sslPass']) options.auth.sslCA = argv['auth-sslPass'];
-  options.auth.sslValidate = argv['auth-sslValidate'];
+  if(argv['auth-sslCA']) options.tlsCAFile = argv['auth-sslCA'];
+  if(argv['auth-sslCert']) options.tlsCertificateFile = argv['auth-sslCert'];
+  if(argv['auth-sslKey']) options.tlsCertificateKeyFile = argv['auth-sslKey'];
+  if(argv['auth-sslPass']) options.tlsCertificateKeyFilePassword = argv['auth-sslPass'];
+  options.tlsAllowInvalidCertificates = argv['auth-sslValidate'];
   
   // Logger options
   if(argv['log_level']) options['log_level'] = argv['log_level'];
@@ -62,13 +72,13 @@ var parseOptions = function(argv) {
 };
 
 // Get parsed arguments
-var argv = yargs.argv;
+const argv = yargs.argv;
 
 // List help
 if(argv.h) return console.log(yargs.help());
 
 // Parse the options and generate final field
-var options = parseOptions(argv);
+const options = parseOptions(argv);
 
 // Create and start the proxy
 new Proxy(options).start();

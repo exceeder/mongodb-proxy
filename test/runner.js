@@ -4,7 +4,7 @@ var Runner = require('integra').Runner
   , FileFilter = require('integra').FileFilter
   , FileFilter = require('integra').FileFilter
   , TestNameFilter = require('integra').TestNameFilter
-  , rimraf = require('rimraf')
+  //, rimraf = require('rimraf')
   , m = require('mongodb-version-manager')
   , f = require('util').format;
 
@@ -40,7 +40,7 @@ var createConfiguration = function(options) {
     var Logger = mongo.Logger;
     var ServerManager = require('mongodb-tools').ServerManager;
     var database = "integration_tests";
-    var url = options.url || "mongodb://%slocalhost:27017/" + database;
+    var url = options.url || "mongodb://localhost:27017/" + database;
     var port = options.port || 27017;
     var host = options.host || 'localhost';
     var replicasetName = options.replicasetName || 'rs';
